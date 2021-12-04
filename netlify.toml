@@ -1,7 +1,3 @@
-[build]
-command = "CI= npm run build"
-publish="build/"
-base = "front/"
 [[redirects]]
 from = "/*"
 to = "/index.html"
