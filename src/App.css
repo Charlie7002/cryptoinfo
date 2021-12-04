@@ -31,6 +31,9 @@ a:hover {
 	/* flex: 0.8; */
 	width: 100%;
 	margin-left: 250px;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
 }
 .routes {
 	padding: 20px;
@@ -372,7 +375,9 @@ a:hover {
 .footer {
 	background-color: #001529;
 	display: flex;
+	flex: 1;
 	flex-direction: column;
 	padding: 20px;
 	align-items: center;
+	max-height: 100px;
 }
