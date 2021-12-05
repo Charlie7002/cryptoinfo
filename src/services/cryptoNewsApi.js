@@ -1,4 +1,3 @@
-import dotenv from 'dotenv';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 const cryptoNewsAPiHeaders = {
