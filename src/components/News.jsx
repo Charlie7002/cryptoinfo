@@ -63,7 +63,7 @@ const News = ({ simplified }) => {
 										src={
 											news?.image?.thumbnail?.contentUrl || demoImg
 										}
-										atl="news"
+										alt="news"
 									/>
 								</div>
 								<p>

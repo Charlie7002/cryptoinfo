@@ -1,4 +1,3 @@
-import { icons } from 'antd/lib/image/PreviewGroup';
 import React, { useEffect, useState } from 'react';
 import {
 	HomeOutlined,

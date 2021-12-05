@@ -3,7 +3,6 @@ import millify from 'millify';
 
 import { useGetCryptosQuery } from '../services/cryptoApi';
 
-import loader from './Loader';
 import { Link } from 'react-router-dom';
 import { Card, Col, Input, Row } from 'antd';
 import Loader from './Loader';
