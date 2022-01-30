@@ -7,17 +7,23 @@ const cryptoAPiHeaders = {
 
 const baseUrl = process.env.REACT_APP_CRYPTO_API_URL;
 
-const createRequest = url => ({ url, headers: cryptoAPiHeaders });
+const createRequest = url => ({
+	method: 'GET',
+	url,
+	headers: cryptoAPiHeaders,
+});
+
+console.log(createRequest);
 
 export const cryptoApi = createApi({
 	reducerPath: 'cryptoApi',
 	baseQuery: fetchBaseQuery({ baseUrl }),
 	endpoints: builder => ({
 		getCryptos: builder.query({
-			query: count => createRequest(`/coins?limit=${count}`),
+			query: count => createRequest(`/tickers?limit=${count}`),
 		}),
 		getCryptoDetails: builder.query({
-			query: coinId => createRequest(`/coin/${coinId}`),
+			query: coinId => createRequest(`/coins/${coinId}`),
 		}),
 		getCryptoHistory: builder.query({
 			query: ({ coinId, timePeriod }) =>
@@ -25,6 +31,9 @@ export const cryptoApi = createApi({
 		}),
 		getCryptosExchanges: builder.query({
 			query: () => createRequest(`/exchanges`),
+		}),
+		getGlobalInfo: builder.query({
+			query: () => createRequest(`/global`),
 		}),
 	}),
 });
@@ -34,4 +43,5 @@ export const {
 	useGetCryptoDetailsQuery,
 	useGetCryptoHistoryQuery,
 	useGetCryptosExchangesQuery,
+	useGetGlobalInfoQuery,
 } = cryptoApi;

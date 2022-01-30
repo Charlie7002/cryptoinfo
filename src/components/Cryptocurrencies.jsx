@@ -9,20 +9,23 @@ import Loader from './Loader';
 
 const Cryptocurrencies = ({ simplified }) => {
 	const count = simplified ? 10 : 100;
-	const { data: cryptoList, isFetching } = useGetCryptosQuery(count);
+	const { data, isFetching } = useGetCryptosQuery(count);
 
 	//state cryptos init by useEffect
-	const [cryptos, setCryptos] = useState([]);
+	const [cryptos, setCryptos] = useState(data);
 	const [searchValue, setSearchValue] = useState('');
 
 	useEffect(() => {
-		const filteredData = cryptoList?.data?.coins.filter(coin =>
+		const filteredData = data?.filter(coin =>
 			coin.name.toLowerCase().includes(searchValue),
 		);
 		setCryptos(filteredData);
-	}, [cryptoList, searchValue]);
+	}, [data, searchValue]);
 
 	if (isFetching) return <Loader />;
+
+	console.log(data);
+	console.log(cryptos);
 
 	return (
 		<>
@@ -50,15 +53,20 @@ const Cryptocurrencies = ({ simplified }) => {
 								title={`${currency.rank}. ${currency.name}`}
 								extra={
 									<img
-										src={currency.iconUrl}
+										src={`https://cryptoicon-api.vercel.app/api/icon/${currency.symbol.toLowerCase()}`}
 										className="crypto-image"
 									/>
 								}
 								hoverable
 							>
-								<p>Price : {millify(currency.price)}</p>
-								<p>Market Cap : {millify(currency.marketCap)}</p>
-								<p>Daily Change : {millify(currency.change)}%</p>
+								<p>Price :{millify(currency.quotes.USD.price)}</p>
+								<p>
+									Market Cap :{millify(currency.quotes.USD.market_cap)}
+								</p>
+								<p>
+									Daily Change :
+									{millify(currency.quotes.USD.percent_change_24h)}%
+								</p>
 							</Card>
 						</Link>
 					</Col>

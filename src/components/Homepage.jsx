@@ -2,7 +2,10 @@ import React from 'react';
 import millify from 'millify';
 import { Col, Row, Statistic, Typography } from 'antd';
 
-import { useGetCryptosQuery } from '../services/cryptoApi';
+import {
+	useGetCryptosQuery,
+	useGetGlobalInfoQuery,
+} from '../services/cryptoApi';
 import { Link } from 'react-router-dom';
 import { Cryptocurrencies, News } from './';
 import Loader from './Loader';
@@ -10,8 +13,8 @@ import Loader from './Loader';
 const { Title } = Typography;
 
 const Homepage = () => {
-	const { data, isFetching } = useGetCryptosQuery(10);
-	const globalStats = data?.data?.stats;
+	const { data, isFetching } = useGetGlobalInfoQuery();
+	console.log(data);
 
 	if (isFetching) return <Loader />;
 	return (
@@ -23,31 +26,32 @@ const Homepage = () => {
 				<Col span={12}>
 					<Statistic
 						title="Total Cryptocurrencies"
-						value={globalStats.total}
+						value={data?.cryptocurrencies_number}
+					/>
+				</Col>
+
+				<Col span={12}>
+					<Statistic
+						title="Volume 24h"
+						value={'$' + millify(data?.volume_24h_usd)}
 					/>
 				</Col>
 				<Col span={12}>
 					<Statistic
-						title="Total Exchanges"
-						value={millify(globalStats.totalExchanges)}
+						title="Market Cap ATH Value"
+						value={'$' + millify(data?.market_cap_ath_value)}
 					/>
 				</Col>
 				<Col span={12}>
 					<Statistic
-						title="Total Market Cap"
-						value={millify(globalStats.totalMarketCap)}
+						title="Volume 24h ATH"
+						value={'$' + millify(parseInt(data?.volume_24h_ath_value))}
 					/>
 				</Col>
 				<Col span={12}>
 					<Statistic
-						title="Total 24h volume"
-						value={millify(globalStats.total24hVolume)}
-					/>
-				</Col>
-				<Col span={12}>
-					<Statistic
-						title="Total Total Markets"
-						value={millify(globalStats.totalMarkets)}
+						title="Market Cap"
+						value={'$' + millify(+data?.market_cap_usd)}
 					/>
 				</Col>
 			</Row>
