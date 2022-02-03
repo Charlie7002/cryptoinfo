@@ -7,7 +7,7 @@ const { Title } = Typography;
 const LineCharts = ({ coinHistory, currentPrice, coinName }) => {
 	const coinPrice = [];
 	const coinTimestamp = [];
-	coinHistory?.data?.history?.forEach(el => {
+	coinHistory?.forEach(el => {
 		coinPrice.push(el.price);
 		coinTimestamp.push(new Date(el.timestamp).toLocaleDateString());
 	});
@@ -19,8 +19,8 @@ const LineCharts = ({ coinHistory, currentPrice, coinName }) => {
 				label: 'Price In USD',
 				data: coinPrice,
 				fill: false,
-				backgroundColor: '#0071bd',
-				borderColor: '#0071bd',
+				backgroundColor: '#3133ce',
+				borderColor: '#3133ce',
 			},
 		],
 	};
@@ -43,14 +43,6 @@ const LineCharts = ({ coinHistory, currentPrice, coinName }) => {
 				<Title level={2} className="chart-title">
 					{coinName} Price Chart
 				</Title>
-				<Col className="price-container">
-					<Title level={5} className="price-change">
-						{coinHistory?.data?.change}%
-					</Title>
-					<Title level={5} className="currentPrice">
-						Current {coinName} Price : $ {currentPrice}
-					</Title>
-				</Col>
 			</Row>
 			<Line data={data} options={options} />
 		</>

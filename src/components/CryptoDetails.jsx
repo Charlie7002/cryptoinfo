@@ -5,17 +5,20 @@ import millify from 'millify';
 import {
 	useGetCryptoDetailsQuery,
 	useGetCryptoHistoryQuery,
+	useGetCryptoQuery,
 } from '../services/cryptoApi';
 import {
 	MoneyCollectOutlined,
 	DollarCircleOutlined,
 	FundOutlined,
-	ExclamationCircleOutlined,
-	StopOutlined,
 	TrophyOutlined,
-	CheckOutlined,
 	NumberOutlined,
 	ThunderboltOutlined,
+	PieChartOutlined,
+	SlidersOutlined,
+	AreaChartOutlined,
+	SisternodeOutlined,
+	ApartmentOutlined,
 } from '@ant-design/icons';
 import { Col, Row, Typography, Select } from 'antd';
 
@@ -28,95 +31,130 @@ const { Option } = Select;
 
 const CryptoDetails = () => {
 	const [timePeriod, setTimePeriod] = useState('7d');
+	let now = new Date().toLocaleDateString('fr-CA');
+	let oneYearFromNow = new Date();
+	oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() - 1);
+	let oneYearBack = oneYearFromNow.toLocaleDateString('fr-CA');
+
 	const { coinId } = useParams();
 	const { data: cryptoDetails, isFetching } = useGetCryptoDetailsQuery(coinId);
+	const { data: coinHistory } = useGetCryptoHistoryQuery({
+		coinId,
+		timePeriod,
+		start: oneYearBack,
+		end: now,
+	});
+	const { data: crypto } = useGetCryptoQuery(coinId);
 
-	// const { data: coinHistory } = useGetCryptoHistoryQuery({
-	// 	coinId,
-	// 	timePeriod,
-	// });
-
-	// const cryptoDetails = data?.data?.coin;
-
-	console.log(cryptoDetails);
-
-	if (isFetching) return <Loader />;
-
-	const time = ['3h', '24h', '7d', '30d', '1y', '3m', '3y', '5y'];
+	const time = ['1h', '4h', '1d', '7d', '14d', '30d', '90d', '360d'];
 
 	const stats = [
-		{
-			title: 'Price to USD',
-			value: `$ ${cryptoDetails.price && millify(cryptoDetails.price)}`,
-			icon: <DollarCircleOutlined />,
-		},
-		{ title: 'Rank', value: cryptoDetails.rank, icon: <NumberOutlined /> },
+		{ title: 'Rank', value: cryptoDetails?.rank, icon: <NumberOutlined /> },
 		{
 			title: 'Type of Proof ',
-			value: `${cryptoDetails.proof_type}`,
+			value: `${cryptoDetails?.proof_type}` || '',
 			icon: <ThunderboltOutlined />,
 		},
 		{
 			title: 'Developement Status',
-			value: cryptoDetails.development_status,
-			icon: <DollarCircleOutlined />,
+			value: cryptoDetails?.development_status || '',
+			icon: <SisternodeOutlined />,
 		},
 		{
 			title: 'Organisation Structure',
-			value: cryptoDetails.org_structure,
-			icon: <TrophyOutlined />,
+			value: cryptoDetails?.org_structure || '',
+			icon: <ApartmentOutlined />,
 		},
 		{
 			title: 'Start Date',
-			value: cryptoDetails.started_at,
+			value: cryptoDetails?.started_at?.slice(0, 10) || '',
+
 			icon: <TrophyOutlined />,
+		},
+		{
+			title: 'Price to USD',
+			value:
+				`$ ${
+					crypto?.quotes?.USD?.price && millify(crypto?.quotes?.USD?.price)
+				}` || '',
+			icon: <DollarCircleOutlined />,
 		},
 	];
 
-	// const genericStats = [
-	// 	{
-	// 		title: 'Number Of Markets',
-	// 		value: cryptoDetails.numberOfMarkets,
-	// 		icon: <FundOutlined />,
-	// 	},
-	// 	{
-	// 		title: 'Number Of Exchanges',
-	// 		value: cryptoDetails.numberOfExchanges,
-	// 		icon: <MoneyCollectOutlined />,
-	// 	},
-	// 	{
-	// 		title: 'Aprroved Supply',
-	// 		value: cryptoDetails.approvedSupply ? (
-	// 			<CheckOutlined />
-	// 		) : (
-	// 			<StopOutlined />
-	// 		),
-	// 		icon: <ExclamationCircleOutlined />,
-	// 	},
-	// 	{
-	// 		title: 'Total Supply',
-	// 		value: `$ ${millify(cryptoDetails.totalSupply)}`,
-	// 		icon: <ExclamationCircleOutlined />,
-	// 	},
-	// 	{
-	// 		title: 'Circulating Supply',
-	// 		value: `$ ${
-	// 			cryptoDetails.circulatingSupply
-	// 				? millify(cryptoDetails.circulatingSupply)
-	// 				: ''
-	// 		}`,
-	// 		icon: <ExclamationCircleOutlined />,
-	// 	},
-	// ];
+	const genericStats = [
+		{
+			title: 'Circulating supply',
+			value: `$ ${
+				(crypto?.circulating_supply &&
+					millify(crypto?.circulating_supply)) ||
+				''
+			}`,
+			icon: <FundOutlined />,
+		},
+		{
+			title: 'Total supply',
+			value:
+				`$ ${crypto?.total_supply && millify(crypto?.total_supply)}` || '',
+			icon: <MoneyCollectOutlined />,
+		},
+		{
+			title: 'Market Cap',
+			value: `$ ${
+				crypto?.quotes?.USD?.market_cap &&
+				millify(crypto?.quotes?.USD?.market_cap)
+			}`,
+			icon: <AreaChartOutlined />,
+		},
+		{
+			title: 'ATH price',
+			value:
+				(crypto?.quotes?.USD?.ath_price &&
+					millify(crypto?.quotes?.USD?.ath_price)) ||
+				'',
+			icon: <SlidersOutlined />,
+		},
+
+		{
+			title: 'Percent from price ATH',
+			value:
+				`% ${
+					crypto?.quotes?.USD?.percent_from_price_ath &&
+					millify(crypto?.quotes?.USD?.percent_from_price_ath)
+				}` || '',
+			icon: <PieChartOutlined />,
+		},
+	];
+	console.log(cryptoDetails);
+	console.log(crypto);
+
+	if (isFetching) return <Loader />;
 
 	return (
 		<Col className="coin-detail-container">
 			<Col className="coin-heading-container">
 				<Title level={2} className="coin-name">
-					{cryptoDetails.name} ({cryptoDetails.symbol})
+					{cryptoDetails?.name} ({cryptoDetails?.symbol})
 				</Title>
-				<p>{cryptoDetails.name} View globale informations.</p>
-				{/* 	<Select
+				<p>{cryptoDetails?.name} View globale informations</p>
+				<Col className="coin-value-statistics">
+					<Col className="coin-value=statistics-heading">
+						<Title level={3} className="coin-details-heading">
+							{cryptoDetails?.name} Global Informations
+						</Title>
+						<p>An overview showing the story of {cryptoDetails?.name}</p>
+					</Col>
+					{stats.map(({ icon, title, value }) => (
+						<Col className="coin-stats">
+							<Col className="coin-stats-name">
+								<Text>{icon}</Text>
+								<Text>{title}</Text>
+							</Col>
+							<Text className="stats">{value}</Text>
+						</Col>
+					))}
+				</Col>
+				<Row style={{ height: '50px' }}></Row>
+				<Select
 					defaultValue="7d"
 					className="select-timeperiod"
 					placeholder="Select Time Period"
@@ -129,30 +167,10 @@ const CryptoDetails = () => {
 
 				<LineCharts
 					coinHistory={coinHistory}
-					currentPrice={millify(cryptoDetails.price)}
-					coinNAme={cryptoDetails.name}
+					coinNAme={cryptoDetails?.name}
 				/>
-*/}
+
 				<Col className="stats-container">
-					<Col className="coin-value-statistics">
-						<Col className="coin-value=statistics-heading">
-							<Title level={3} className="coin-details-heading">
-								{cryptoDetails.name} Global Informations
-							</Title>
-							<p>
-								An overview showing the story of {cryptoDetails.name}
-							</p>
-						</Col>
-						{stats.map(({ icon, title, value }) => (
-							<Col className="coin-stats">
-								<Col className="coin-stats-name">
-									<Text>{icon}</Text>
-									<Text>{title}</Text>
-								</Col>
-								<Text className="stats">{value}</Text>
-							</Col>
-						))}
-					</Col>
 					<Col className="other-stats-info">
 						<Col className="coin-value=statistics-heading">
 							<Title level={3} className="coin-details-heading">
@@ -162,7 +180,7 @@ const CryptoDetails = () => {
 								An overview showing the stats of all cryptocurrencies
 							</p>
 						</Col>
-						{/* {genericStats.map(({ icon, title, value }) => (
+						{genericStats.map(({ icon, title, value }) => (
 							<Col className="coin-stats">
 								<Col className="coin-stats-name">
 									<Text>{icon}</Text>
@@ -170,53 +188,58 @@ const CryptoDetails = () => {
 								</Col>
 								<Text className="stats">{value}</Text>
 							</Col>
-						))} */}
+						))}
 					</Col>
 				</Col>
 			</Col>
-			<Col className="coin-desc-link">
-				<Row className="coin-desc">
+
+			<Row className="coin-desc" gutter={100}>
+				<Col span={12}>
 					<Title level={3} className="coin-details-heading">
-						What is {cryptoDetails.name}
+						What is {cryptoDetails?.name}
 					</Title>
 					<Typography>
-						{HTMLReactParsers(cryptoDetails.description)}
+						{HTMLReactParsers(cryptoDetails?.description)}
 					</Typography>
-				</Row>
-				<Row>
+				</Col>
+				<Col span={12}>
 					<Title level={3} className="coin-details-heading">
-						White Paper {cryptoDetails.name}
+						White Paper {cryptoDetails?.name}
 					</Title>
 
 					<a
-						href={cryptoDetails.whitepaper.link}
+						href={cryptoDetails?.whitepaper.link}
 						target="_blank"
 						rel="noreferrer"
 					>
 						<img
-							src={cryptoDetails.whitepaper.thumbnail}
-							alt="white paper"
+							src={cryptoDetails?.whitepaper.thumbnail}
+							alt="whitepaper"
 						/>
 					</a>
-				</Row>
-				<Row>
+				</Col>
+			</Row>
+			<Row>
+				<Col span={24}>
 					<Title level={3} className="coin-details-heading">
-						Team {cryptoDetails.name}
+						Team : {cryptoDetails?.name}
 					</Title>
-					<div>
-						{cryptoDetails.team.map(person => (
-							<div key={person.id}>
-								<p>
-									Name : {person.name} - {person.position}
-								</p>
-							</div>
-						))}
-					</div>
-				</Row>
+				</Col>
+				<Col span={24}>
+					{cryptoDetails?.team.map(person => (
+						<div key={person.id}>
+							<p>
+								{person.name} - {person.position}
+							</p>
+						</div>
+					))}
+				</Col>
+			</Row>
+			<Col span={24} className="coin-desc-link">
 				<Col className="coin-links">
 					<Title level={3} className="coin-details-heading">
-						{cryptoDetails.name} Links
-						{cryptoDetails.links.explorer.map(link => (
+						Links {cryptoDetails?.name}
+						{cryptoDetails?.links?.explorer?.map(link => (
 							<Row className="coin-link" key={link}>
 								<a href={link} target="_blank" rel="noreferrer">
 									<Title level={5} className="link-name">

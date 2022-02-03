@@ -24,9 +24,6 @@ const Cryptocurrencies = ({ simplified }) => {
 
 	if (isFetching) return <Loader />;
 
-	console.log(data);
-	console.log(cryptos);
-
 	return (
 		<>
 			{!simplified && (
@@ -39,7 +36,11 @@ const Cryptocurrencies = ({ simplified }) => {
 				</div>
 			)}
 
-			<Row gutter={[32, 32]} className="crypto-card-container">
+			<Row
+				gutter={[32, 32]}
+				className="crypto-card-container"
+				justify="center"
+			>
 				{cryptos?.map(currency => (
 					<Col
 						xs={24}
@@ -50,6 +51,10 @@ const Cryptocurrencies = ({ simplified }) => {
 					>
 						<Link to={`/crypto/${currency.id}`}>
 							<Card
+								style={{
+									borderRadius: '15px',
+									color: ' #20229b',
+								}}
 								title={`${currency.rank}. ${currency.name}`}
 								extra={
 									<img
@@ -59,12 +64,13 @@ const Cryptocurrencies = ({ simplified }) => {
 								}
 								hoverable
 							>
-								<p>Price :{millify(currency.quotes.USD.price)}</p>
+								<p>Price : $ {millify(currency.quotes.USD.price)}</p>
 								<p>
-									Market Cap :{millify(currency.quotes.USD.market_cap)}
+									Market Cap : $
+									{millify(currency.quotes.USD.market_cap)}
 								</p>
 								<p>
-									Daily Change :
+									Daily Change :{''}
 									{millify(currency.quotes.USD.percent_change_24h)}%
 								</p>
 							</Card>

@@ -5,7 +5,7 @@ import HTMLReactParsers from 'html-react-parser';
 
 import { useGetCryptosExchangesQuery } from '../services/cryptoApi';
 
-import { Col, Row, Collapse, Avatar, Typography } from 'antd';
+import { Col, Row, Collapse, Typography } from 'antd';
 import Loader from './Loader';
 const { Text } = Typography;
 const { Panel } = Collapse;
@@ -21,8 +21,6 @@ const Exchanges = () => {
 	useEffect(() => {
 		setEx(filterData);
 	}, []);
-
-	console.log(filterData);
 
 	if (isFetching) return <Loader />;
 
@@ -45,7 +43,7 @@ const Exchanges = () => {
 									header={
 										<Row style={{ width: '100%' }} key={exchange.id}>
 											<Col span={6}>
-												<Text>
+												<Text style={{ color: '#20229b' }}>
 													<strong>
 														{exchange.adjusted_rank}.{' '}
 													</strong>
@@ -54,7 +52,7 @@ const Exchanges = () => {
 												className="exchange-image"
 												src={`https://cryptoicon-api.vercel.app/api/icon/${currency.symbol.toLowerCase()}`}
 											/> */}
-												<Text>
+												<Text style={{ color: '#20229b' }}>
 													<strong>{exchange.name}</strong>
 												</Text>
 											</Col>
