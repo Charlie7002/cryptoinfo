@@ -20,17 +20,11 @@ const Homepage = () => {
 			</Title>
 			<Row justify="center" align="center" gutter={32}>
 				<Col xs={{ span: 5, offset: 1 }} lg={{ span: 6, offset: 1 }}>
-					<Statistic
-						title="Total Cryptocurrencies"
-						value={data?.cryptocurrencies_number}
-					/>
+					<Statistic title="Total Cryptocurrencies" value={data?.cryptocurrencies_number} />
 				</Col>
 
 				<Col xs={{ span: 5, offset: 1 }} lg={{ span: 6, offset: 1 }}>
-					<Statistic
-						title="Volume 24h"
-						value={'$' + millify(data?.volume_24h_usd)}
-					/>
+					<Statistic title="Volume 24h" value={'$' + millify(data?.volume_24h_usd)} />
 				</Col>
 				<Col xs={{ span: 5, offset: 1 }} lg={{ span: 6, offset: 1 }}>
 					<Statistic
@@ -39,16 +33,10 @@ const Homepage = () => {
 					/>
 				</Col>
 				<Col xs={{ span: 5, offset: 1 }} lg={{ span: 6, offset: 1 }}>
-					<Statistic
-						title="Volume 24h ATH"
-						value={'$' + millify(parseInt(data?.volume_24h_ath_value))}
-					/>
+					<Statistic title="Volume 24h ATH" value={'$' + data?.volume_24h_ath_value} />
 				</Col>
 				<Col xs={{ span: 5, offset: 1 }} lg={{ span: 6, offset: 1 }}>
-					<Statistic
-						title="Market Cap"
-						value={'$' + millify(+data?.market_cap_usd)}
-					/>
+					<Statistic title="Market Cap" value={'$' + millify(+data?.market_cap_usd)} />
 				</Col>
 				<Col xs={{ span: 5, offset: 1 }} lg={{ span: 6, offset: 1 }}>
 					<Statistic
